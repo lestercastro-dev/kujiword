@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akuji's Crossword!</title>
+    <!-- Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <button id="home-btn-fixed" class="nav-fixed hidden" onclick="goHome()">
+        <ion-icon name="arrow-back"></ion-icon> Home
+    </button>
+
+    <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Mode">
+        <ion-icon name="moon" id="theme-icon"></ion-icon>
+    </button>
+
+    <!-- PAGE 1: HOMEPAGE -->
+    <div id="home-page" class="page active">
+        <div class="hero-content">
+            <h1>kujiword</h1>
+            <p class="subtitle">⋆｡°✩ a crossword game made by akuji ✩°｡⋆</p>
+            <button class="start-btn" onclick="startGame()">Start Game</button>
+        </div>
+    </div>
+
+    <!-- PAGE 2: GAME BOARD -->
+    <div id="game-page" class="page hidden">
+        <div class="header-spacer"></div>
+
+        <div class="game-container">
+            <!-- The Board -->
+            <div class="board-wrapper">
+                <div id="crossword-board"></div>
+            </div>
+
+            <!-- The Clues & Controls -->
+            <div class="clues-section">
+                <div class="clue-box">
+                    <h3>Across ➜</h3>
+                    <ul id="across-clues"></ul>
+                </div>
+                <div class="clue-box">
+                    <h3>Down ⬇</h3>
+                    <ul id="down-clues"></ul>
+                </div>
+
+                <div class="controls-sidebar">
+                    <!-- TIP IS HERE -->
+                    <p class="instruction-tip">
+                        💡 <strong>TIP:</strong> Click box again to switch direction (➡ / ⬇)
+                    </p>
+                    
+                    <div class="button-row">
+                        <button class="action-btn" onclick="checkAnswers()">Check</button>
+                        <button class="action-btn" onclick="startGame()">New</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WIN MODAL (POPUP) -->
+    <div id="win-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>Yay! Perfect! 🌸</h2>
+            <p>You solved the puzzle!</p>
+            <div class="modal-buttons">
+                <button class="action-btn secondary" onclick="closeModal()">Continue</button>
+                <button class="action-btn" onclick="startGame()">New Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. LOAD WORDS FIRST -->
+    <script src="words.js"></script>
+    <!-- 2. LOAD GAME LOGIC SECOND -->
+    <script src="script.js"></script>
+</body>
+</html>

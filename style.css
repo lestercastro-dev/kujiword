@@ -1,0 +1,358 @@
+/* 1. IMPORTS & RESETS */
+@import url('https://fonts.googleapis.com/css2?family=Sniglet:wght@400;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+    /* --- LIGHT MODE --- */
+    --bg-color: #b0c4de;
+    --grid-line: rgba(60, 80, 110, 0.15);
+    --text-color: #5d6d8e;
+    
+    /* Tile / Input Styles */
+    --tile-bg: #e1eaf5;
+    --tile-border: #96abc4b7;
+    --tile-text: #3b4d70;
+    --tile-focus: #ffffff;
+    --tile-focus-border: #3b4d70;
+    --highlight-bg: #fffde7; 
+    
+    /* Status Colors */
+    --correct-bg: #7ab895;   
+    --wrong-bg: #9cb0c9;     
+    --correct-text: #ffffff;
+    
+    /* UI Elements */
+    --container-bg: #ffffff;
+    --container-border: #8fa6c9;
+    --container-shadow: rgba(62, 85, 117, 0.15);
+    
+    --btn-bg: #e1eaf5;
+    --btn-text: #3b4d70;
+    --btn-border: #5d6d8e;
+}
+
+[data-theme="dark"] {
+    /* --- DARK MODE --- */
+    --bg-color: #1a1a1c;
+    --grid-line: rgba(255, 255, 255, 0.05);
+    --text-color: #f2e6d8;
+    
+    /* Tile / Input Styles */
+    --tile-bg: #2b2b2e;
+    --tile-border: #c94c4c;
+    --tile-text: #f2e6d8;
+    --tile-focus: #1a1a1c;
+    --tile-focus-border: #ff6b6b;
+    
+    /* CHANGED: Brighter Red Highlight so you can see it */
+    --highlight-bg: #662222; 
+    
+    /* Status Colors */
+    --correct-bg: #004d40;   
+    /* CHANGED: Lighter Gray so it stands out from the black background */
+    --wrong-bg: #787c7e;     
+    --correct-text: #ffffff;
+    
+    /* UI Elements */
+    --container-bg: #1a1a1c;
+    --container-border: #c94c4c;
+    --container-shadow: rgba(201, 76, 76, 0.2);
+    
+    --btn-bg: #2b2b2e;
+    --btn-text: #c94c4c;
+    --btn-border: #c94c4c;
+}
+
+body {
+    font-family: 'Sniglet', cursive;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background-color 0.3s, color 0.3s;
+    background-image: 
+        linear-gradient(var(--grid-line) 2px, transparent 2px),
+        linear-gradient(90deg, var(--grid-line) 2px, transparent 2px);
+    background-size: 60px 60px; 
+    background-attachment: fixed;
+}
+
+/* --- NAVIGATION & TOGGLES --- */
+.nav-fixed {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: var(--btn-bg);
+    border: 3px solid var(--text-color);
+    color: var(--text-color);
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: 'Sniglet', cursive;
+    font-size: 1.2rem;
+    z-index: 1000;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+}
+
+#theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--btn-bg);
+    border: 3px solid var(--text-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+    z-index: 1000;
+}
+
+/* --- PAGES --- */
+.page { 
+    width: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    position: relative;
+}
+.hidden { display: none !important; }
+
+/* --- HOMEPAGE --- */
+#home-page {
+    height: 100vh;
+    justify-content: center;
+    text-align: center;
+}
+
+h1 {
+    font-size: 5rem;
+    color: var(--tile-bg);
+    -webkit-text-stroke: 3px var(--text-color);
+    text-shadow: 5px 5px 0px var(--tile-border);
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    font-size: 1.8rem;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+/* --- GAME LAYOUT --- */
+.header-spacer { height: 80px; }
+
+.game-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 40px;
+}
+
+.board-wrapper {
+    background-color: var(--container-bg);
+    padding: 20px;
+    border-radius: 20px;
+    border: 4px solid var(--container-border);
+    box-shadow: 0 10px 0 var(--container-shadow);
+}
+
+#crossword-board {
+    display: grid;
+    gap: 5px;
+}
+
+/* CROSSWORD TILES */
+input {
+    width: 55px;
+    height: 55px;
+    text-align: center;
+    font-family: 'Sniglet', cursive;
+    font-size: 22px;  
+    font-weight: 400; 
+    color: var(--tile-text);
+    background-color: var(--tile-bg);
+    border: 3px solid var(--tile-border);
+    border-radius: 10px; 
+    outline: none;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    padding: 0;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.1); 
+}
+
+input:focus {
+    border-color: var(--tile-focus-border);
+    background-color: var(--tile-focus);
+    transform: translateY(-2px);
+    z-index: 20;
+}
+
+.active-word-highlight {
+    background-color: var(--highlight-bg) !important;
+}
+
+.black-square { width: 55px; height: 55px; background: transparent; border: none; box-shadow: none; }
+.game-cell { position: relative; }
+.number-label {
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--text-color);
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.8;
+}
+
+/* CLUES & CONTROLS */
+.clues-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.clue-box {
+    background-color: var(--container-bg);
+    border: 3px solid var(--container-border);
+    border-radius: 20px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 6px 6px 0 var(--container-shadow);
+    max-height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+h3 {
+    margin-top: 0;
+    color: var(--text-color);
+    border-bottom: 2px dashed var(--tile-border);
+    padding-bottom: 10px;
+    text-transform: uppercase;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+li {
+    margin-bottom: 12px;
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--text-color);
+}
+
+.controls-sidebar {
+    text-align: center;
+    margin-top: 10px;
+    width: 300px;
+}
+
+.button-row {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+button.start-btn, button.action-btn {
+    font-family: 'Sniglet', cursive;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 15px 30px;
+    border-radius: 50px; 
+    cursor: pointer;
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    border: 4px solid var(--btn-border);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.1);
+    transition: transform 0.1s;
+}
+
+button.start-btn {
+    font-size: 28px;
+    padding: 20px 50px;
+}
+
+button:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+/* THE TIP */
+.instruction-tip {
+    font-size: 1rem;
+    color: var(--text-color);
+    background-color: var(--container-bg);
+    border: 2px dashed var(--container-border);
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    margin-top: 0;
+}
+
+/* --- WIN MODAL STYLES --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5); 
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background-color: var(--container-bg);
+    border: 5px solid var(--container-border);
+    border-radius: 25px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    max-width: 400px;
+    animation: scaleUp 0.3s ease;
+}
+
+.modal-content h2 {
+    color: var(--text-color);
+    font-size: 2.5rem;
+    margin-top: 0;
+}
+
+.modal-content p {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-bottom: 30px;
+}
+
+.modal-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleUp { from { transform: scale(0.8); } to { transform: scale(1); } }
