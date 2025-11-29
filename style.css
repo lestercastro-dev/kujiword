@@ -4,6 +4,10 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 :root {
+    /* --- SIZING VARIABLES (RESPONSIVE) --- */
+    --tile-size: 55px; /* Default Desktop Size */
+    --font-size: 22px;
+    
     /* --- LIGHT MODE --- */
     --bg-color: #b0c4de;
     --grid-line: rgba(60, 80, 110, 0.15);
@@ -44,13 +48,10 @@
     --tile-text: #f2e6d8;
     --tile-focus: #1a1a1c;
     --tile-focus-border: #ff6b6b;
-    
-    /* CHANGED: Brighter Red Highlight so you can see it */
     --highlight-bg: #662222; 
     
     /* Status Colors */
     --correct-bg: #004d40;   
-    /* CHANGED: Lighter Gray so it stands out from the black background */
     --wrong-bg: #787c7e;     
     --correct-text: #ffffff;
     
@@ -80,6 +81,9 @@ body {
         linear-gradient(90deg, var(--grid-line) 2px, transparent 2px);
     background-size: 60px 60px; 
     background-attachment: fixed;
+    /* Prevent horizontal scroll on mobile */
+    overflow-x: hidden;
+    width: 100%;
 }
 
 /* --- NAVIGATION & TOGGLES --- */
@@ -125,6 +129,7 @@ body {
     flex-direction: column; 
     align-items: center;
     position: relative;
+    padding: 10px;
 }
 .hidden { display: none !important; }
 
@@ -142,6 +147,8 @@ h1 {
     text-shadow: 5px 5px 0px var(--tile-border);
     margin: 0;
     letter-spacing: 2px;
+    line-height: 1.1;
+    padding: 0 10px;
 }
 
 .subtitle {
@@ -162,39 +169,45 @@ h1 {
     justify-content: center;
     align-items: flex-start;
     margin-bottom: 40px;
+    width: 100%;
+    max-width: 1200px;
 }
 
 .board-wrapper {
     background-color: var(--container-bg);
-    padding: 20px;
+    padding: 15px;
     border-radius: 20px;
     border: 4px solid var(--container-border);
     box-shadow: 0 10px 0 var(--container-shadow);
+    /* Ensure board fits on screen */
+    max-width: 100%;
+    overflow-x: auto; /* Just in case */
 }
 
 #crossword-board {
     display: grid;
-    gap: 5px;
+    gap: 4px; /* Slightly tighter gap */
+    margin: 0 auto;
 }
 
 /* CROSSWORD TILES */
 input {
-    width: 55px;
-    height: 55px;
+    width: var(--tile-size);
+    height: var(--tile-size);
     text-align: center;
     font-family: 'Sniglet', cursive;
-    font-size: 22px;  
+    font-size: var(--font-size);  
     font-weight: 400; 
     color: var(--tile-text);
     background-color: var(--tile-bg);
-    border: 3px solid var(--tile-border);
-    border-radius: 10px; 
+    border: 2px solid var(--tile-border); /* Slightly thinner border */
+    border-radius: 8px; 
     outline: none;
     text-transform: uppercase;
     transition: all 0.2s ease;
     cursor: pointer;
     padding: 0;
-    box-shadow: 0 4px 0 rgba(0,0,0,0.1); 
+    box-shadow: 0 3px 0 rgba(0,0,0,0.1); 
 }
 
 input:focus {
@@ -208,13 +221,13 @@ input:focus {
     background-color: var(--highlight-bg) !important;
 }
 
-.black-square { width: 55px; height: 55px; background: transparent; border: none; box-shadow: none; }
+.black-square { width: var(--tile-size); height: var(--tile-size); background: transparent; border: none; box-shadow: none; }
 .game-cell { position: relative; }
 .number-label {
     position: absolute;
     top: 2px;
-    left: 5px;
-    font-size: 12px;
+    left: 4px;
+    font-size: 10px;
     font-weight: bold;
     color: var(--text-color);
     pointer-events: none;
@@ -227,6 +240,8 @@ input:focus {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 100%;
+    max-width: 350px; /* Limit width on desktop */
 }
 
 .clue-box {
@@ -234,9 +249,9 @@ input:focus {
     border: 3px solid var(--container-border);
     border-radius: 20px;
     padding: 20px;
-    width: 300px;
+    width: 100%;
     box-shadow: 6px 6px 0 var(--container-shadow);
-    max-height: 400px;
+    max-height: 300px;
     display: flex;
     flex-direction: column;
 }
@@ -266,13 +281,14 @@ li {
 .controls-sidebar {
     text-align: center;
     margin-top: 10px;
-    width: 300px;
+    width: 100%;
 }
 
 .button-row {
     display: flex;
     gap: 15px;
     justify-content: center;
+    flex-wrap: wrap; /* Allow buttons to stack on tiny screens */
 }
 
 button.start-btn, button.action-btn {
@@ -287,11 +303,15 @@ button.start-btn, button.action-btn {
     border: 4px solid var(--btn-border);
     box-shadow: 0 6px 0 rgba(0,0,0,0.1);
     transition: transform 0.1s;
+    width: auto;
+    min-width: 140px;
 }
 
 button.start-btn {
     font-size: 28px;
     padding: 20px 50px;
+    width: 100%;
+    max-width: 300px;
 }
 
 button:active {
@@ -299,7 +319,6 @@ button:active {
     box-shadow: none;
 }
 
-/* THE TIP */
 .instruction-tip {
     font-size: 1rem;
     color: var(--text-color);
@@ -309,6 +328,14 @@ button:active {
     border-radius: 10px;
     margin-bottom: 15px;
     margin-top: 0;
+}
+
+#message {
+    height: 30px;
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin-bottom: 5px;
+    color: var(--text-color);
 }
 
 /* --- WIN MODAL STYLES --- */
@@ -322,37 +349,92 @@ button:active {
     justify-content: center;
     align-items: center;
     z-index: 5000;
-    animation: fadeIn 0.3s ease;
+    padding: 20px;
 }
 
 .modal-content {
     background-color: var(--container-bg);
     border: 5px solid var(--container-border);
     border-radius: 25px;
-    padding: 40px;
+    padding: 30px;
     text-align: center;
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    width: 100%;
     max-width: 400px;
-    animation: scaleUp 0.3s ease;
 }
 
-.modal-content h2 {
-    color: var(--text-color);
-    font-size: 2.5rem;
-    margin-top: 0;
-}
+/* ========================================= */
+/*      MOBILE RESPONSIVENESS (The Fix)      */
+/* ========================================= */
 
-.modal-content p {
-    font-size: 1.2rem;
-    color: var(--text-color);
-    margin-bottom: 30px;
-}
+@media (max-width: 768px) {
+    :root {
+        /* Shrink tiles for mobile */
+        --tile-size: 28px; 
+        --font-size: 14px;
+    }
 
-.modal-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
+    body {
+        /* Reduce background grid size */
+        background-size: 30px 30px;
+    }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes scaleUp { from { transform: scale(0.8); } to { transform: scale(1); } }
+    /* 1. Header Adjustments */
+    .header-spacer { height: 60px; }
+    
+    h1 {
+        font-size: 3rem; /* Smaller Title */
+        margin-top: 10vh;
+    }
+
+    .subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+
+    /* 2. Controls / Nav */
+    .nav-fixed, #theme-toggle {
+        padding: 8px 15px;
+        font-size: 1rem;
+        width: 40px;
+        height: 40px;
+        top: 10px;
+    }
+    .nav-fixed { width: auto; left: 10px; }
+    #theme-toggle { right: 10px; font-size: 18px; }
+
+    /* 3. Game Layout - Stack Vertically */
+    .game-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .board-wrapper {
+        padding: 10px;
+        border-width: 3px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* 4. Clues Section - Full Width */
+    .clues-section {
+        width: 100%;
+        max-width: 100%; /* Use full screen width */
+    }
+
+    .clue-box {
+        width: 100%; /* Fill container */
+    }
+    
+    .button-row {
+        gap: 10px;
+    }
+    
+    button.action-btn {
+        padding: 12px 20px;
+        font-size: 18px;
+        min-width: 100px;
+    }
+}

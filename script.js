@@ -23,19 +23,17 @@ function toggleTheme() {
 }
 
 function startGame() {
-    // Hide pages & modal
     document.getElementById('home-page').classList.add('hidden');
     document.getElementById('game-page').classList.remove('hidden');
     document.getElementById('home-btn-fixed').classList.remove('hidden');
-    document.getElementById('win-modal').classList.add('hidden'); // Close modal
-    
+    document.getElementById('win-modal').classList.add('hidden'); 
     generatePuzzle();
 }
 
 function goHome() {
     document.getElementById('game-page').classList.add('hidden');
     document.getElementById('home-btn-fixed').classList.add('hidden');
-    document.getElementById('win-modal').classList.add('hidden'); // Close modal
+    document.getElementById('win-modal').classList.add('hidden'); 
     document.getElementById('home-page').classList.remove('hidden');
 }
 
@@ -140,7 +138,11 @@ function renderBoard() {
     board.innerHTML = '';
     acrossList.innerHTML = '';
     downList.innerHTML = '';
-    board.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 55px)`;
+    
+    // *** IMPORTANT MOBILE FIX ***
+    // We use var(--tile-size) instead of 55px. 
+    // This allows CSS to shrink the tiles on mobile.
+    board.style.gridTemplateColumns = `repeat(${GRID_SIZE}, var(--tile-size))`;
 
     activeWords.sort((a,b) => (a.row - b.row) || (a.col - b.col));
     let numCounter = 1;
@@ -246,7 +248,6 @@ function handleKeyDown(e, input) {
         input.value = e.key.toUpperCase();
         moveFocus(r, c, 1);
         
-        // Remove style immediately if they type a new letter
         input.style.backgroundColor = 'var(--tile-bg)';
         input.style.borderColor = 'var(--tile-border)';
         input.style.color = 'var(--tile-text)';
@@ -312,8 +313,6 @@ function highlightActiveWord(r, c) {
 
 function checkAnswers() {
     const inputs = document.querySelectorAll('input');
-    
-    // 1. Clear the "active word" highlight so we can see the colors clearly
     document.querySelectorAll('input').forEach(i => i.classList.remove('active-word-highlight'));
 
     let isPuzzleCompleteAndCorrect = true;
@@ -324,22 +323,15 @@ function checkAnswers() {
         const val = inp.value.toUpperCase();
         const correctVal = grid[r][c];
 
-        // LOGIC CHANGE: Only check non-empty boxes
         if (val.length > 0) {
             if (val === correctVal) {
-                // CORRECT: Turn Green and STAY Green
                 inp.style.backgroundColor = 'var(--correct-bg)';
                 inp.style.color = 'var(--correct-text)';
-                // Optional: You can lock it if you want, but sticking to "color stays"
             } else {
-                // WRONG: Turn Gray (Wrong Color)
                 inp.style.backgroundColor = 'var(--wrong-bg)';
                 inp.style.color = 'var(--correct-text)';
-                
-                // Flag that puzzle is not won yet
                 isPuzzleCompleteAndCorrect = false;
 
-                // REVERT: After 3 seconds, go back to normal
                 setTimeout(() => {
                     inp.style.backgroundColor = 'var(--tile-bg)';
                     inp.style.borderColor = 'var(--tile-border)';
@@ -347,7 +339,6 @@ function checkAnswers() {
                 }, 3000);
             }
         } else {
-            // Empty box found, so puzzle isn't finished
             isPuzzleCompleteAndCorrect = false;
         }
     });
